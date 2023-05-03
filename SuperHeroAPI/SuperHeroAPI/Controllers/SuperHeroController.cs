@@ -60,5 +60,17 @@ namespace SuperHeroAPI.Controllers
 
             return Ok(await _context.SuperHeroes.ToListAsync());
         }
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<SuperHero>>> GetSuperHeroesThatMatch(string name)
+        {
+            string lowerName = name.ToLower();
+
+            return Ok(
+                await _context.SuperHeroes
+                .Where(hero => hero.Name.ToLower().Contains(lowerName))
+                .ToListAsync()
+                );
+        }
     }
 }

@@ -16,6 +16,10 @@ export class SuperHeroService {
     return this.http.get<SuperHero[]>(`${environment.apiUrl}/${this.url}`);
   }
 
+  public getSuperHeroesByName(name: string):  Observable<SuperHero[]> {
+    return this.http.get<SuperHero[]>(`${environment.apiUrl}/${this.url}/${name}`);
+  }
+
   public updateHero(hero: SuperHero): Observable<SuperHero[]> {
     return this.http.put<SuperHero[]>(
       `${environment.apiUrl}/${this.url}`,
