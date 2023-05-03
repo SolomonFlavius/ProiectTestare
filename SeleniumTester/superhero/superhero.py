@@ -42,18 +42,24 @@ class SuperHero(webdriver.Chrome):
         place_input_value = "PlaceTest"
         place_input.send_keys(place_input_value)
 
-        create_button = self.find_element(By.XPATH, "//button[text()='Create']")
-        create_button.click()
-
+        row_value = name_value + " " + first_name_value + " " + last_name_value + " " + place_input_value + " Edit"
+        initial_count = 0
         table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
         for row in table_rows:
-            if(row.text != name_value + " - tested "
-                    + first_name_value + " - tested " 
-                    + last_name_value + " - tested " 
-                    + place_input_value + " - tested Edit"):
-                return True
+            if row.text == row_value:
+                initial_count += 1
 
-        return False
+        create_button = self.find_element(By.XPATH, "//button[text()='Create']")
+        create_button.click()
+        time.sleep(3)
+
+        finished_count = 0
+        table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
+        for row in table_rows:
+            if row.text == row_value:
+                finished_count += 1
+
+        return finished_count == initial_count + 1
 
     def test_edit_form_initial_input_values(self):
         valid = True
@@ -89,6 +95,5 @@ class SuperHero(webdriver.Chrome):
                     valid = False
 
                 row += 1
-                time.sleep(0.4)
         
         return valid
