@@ -49,6 +49,17 @@ try:
             print("\u2717".encode('utf-8').decode(sys.stdout.encoding))
 
         bot.wait(const.FINISHED_TEST_WAITING_TIME)
+
+        # test 5
+        bot.open_page()
+
+        print("test change background color", end=" ")
+        if bot.test_change_color():
+            print("\u2714".encode('utf-8').decode(sys.stdout.encoding))
+        else:
+            print("\u2717".encode('utf-8').decode(sys.stdout.encoding))
+
+        bot.wait(const.FINISHED_TEST_WAITING_TIME)
         
 except Exception as e:
     print(e)

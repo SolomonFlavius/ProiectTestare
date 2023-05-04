@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'SuperHero.UI';
   heroes: SuperHero[] = [];
   heroToEdit?: SuperHero;
+  selectedColor: string = 'white';
 
   constructor(private superHeroService: SuperHeroService) {}
 
@@ -30,5 +31,9 @@ export class AppComponent {
 
   editHero(hero: SuperHero) {
     this.heroToEdit = hero;
+  }
+
+  onSelectChange() {
+    document.body.style.backgroundColor = this.selectedColor;
   }
 }
