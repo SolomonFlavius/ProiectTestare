@@ -102,8 +102,8 @@ class SuperHero(webdriver.Chrome):
                         place_input = self.find_element(By.CSS_SELECTOR, "input[placeholder='Place']")
                         place_input.send_keys(" - edited")
 
-                        delete_button = self.find_element(By.XPATH, "//button[text()='Save']")
-                        delete_button.click()
+                        save_button = self.find_element(By.XPATH, "//button[text()='Save']")
+                        save_button.click()
 
                         search = True
                         break
