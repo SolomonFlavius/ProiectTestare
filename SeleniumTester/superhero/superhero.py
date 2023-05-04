@@ -20,38 +20,38 @@ class SuperHero(webdriver.Chrome):
     def wait(self, seconds: float):
         time.sleep(seconds)
 
-    def test_create_hero(self): 
+    def create_hero(self, name_value="NameTest", first_name_value="FirstNameTest", last_name_value="LastNameTest", place_input_value="PlaceTest"):
         button = self.find_element(By.ID, "create-hero-button")
         button.click()
 
         new_table = self.find_element(By.CSS_SELECTOR, "app-edit-hero")
     
         name_input = new_table.find_element(By.CSS_SELECTOR, "input[placeholder='Name']")
-        name_value = "NameTest"
         name_input.send_keys(name_value)
         
         first_name_input = new_table.find_element(By.CSS_SELECTOR, "input[placeholder='First Name']")
-        first_name_value = "FirstNameTest"
         first_name_input.send_keys(first_name_value)
         
         last_name_input = new_table.find_element(By.CSS_SELECTOR, "input[placeholder='Last Name']")
-        last_name_value = "LastNameTest"
         last_name_input.send_keys(last_name_value)
         
         place_input  = new_table.find_element(By.CSS_SELECTOR, "input[placeholder='Place']")
-        place_input_value = "PlaceTest"
         place_input.send_keys(place_input_value)
 
-        row_value = name_value + " " + first_name_value + " " + last_name_value + " " + place_input_value + " Edit"
+        create_button = self.find_element(By.XPATH, "//button[text()='Create']")
+        create_button.click()
+        time.sleep(2)
+
+    def test_create_hero(self):
+        row_value = "NameTest FirstNameTest LastNameTest PlaceTest Edit"
+        
         initial_count = 0
         table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
         for row in table_rows:
             if row.text == row_value:
                 initial_count += 1
 
-        create_button = self.find_element(By.XPATH, "//button[text()='Create']")
-        create_button.click()
-        time.sleep(3)
+        self.create_hero()
 
         finished_count = 0
         table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
@@ -60,6 +60,84 @@ class SuperHero(webdriver.Chrome):
                 finished_count += 1
 
         return finished_count == initial_count + 1
+
+    def test_update_heros_with_name(self):
+        initial_row_value = "NameTest FirstNameTest LastNameTest PlaceTest Edit"
+        initial_count = 0
+        edited_row_value = "NameTest - edited FirstNameTest - edited LastNameTest - edited PlaceTest - edited Edit"
+        equal_to_edited_count = 0
+
+        table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
+        for row in table_rows:
+            if row.text == initial_row_value:
+                initial_count += 1
+            elif row.text == edited_row_value:
+                equal_to_edited_count += 1
+
+        search = True
+        while search:
+            table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
+            search = False
+
+            for row in table_rows:
+                if row is not None:
+                    td = row.find_element(By.CSS_SELECTOR, "td")
+
+                    if td.text ==  "NameTest":
+                        edit_button = row.find_element(By.CSS_SELECTOR, "button")
+                        edit_button.click()
+
+                        name_input = self.find_element(By.CSS_SELECTOR, "input[placeholder='Name']")
+                        name_input.send_keys(" - edited")
+                        
+                        first_name_input = self.find_element(By.CSS_SELECTOR, "input[placeholder='First Name']")
+                        first_name_input.send_keys(" - edited")
+                        
+                        last_name_input = self.find_element(By.CSS_SELECTOR, "input[placeholder='Last Name']")
+                        last_name_input.send_keys(" - edited")
+                        
+                        place_input = self.find_element(By.CSS_SELECTOR, "input[placeholder='Place']")
+                        place_input.send_keys(" - edited")
+
+                        delete_button = self.find_element(By.XPATH, "//button[text()='Save']")
+                        delete_button.click()
+
+                        search = True
+                        break
+
+            time.sleep(2)
+
+        table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
+        after_edit_count = 0
+        for row in table_rows:
+            if row.text == edited_row_value:
+                after_edit_count += 1
+
+        return after_edit_count == initial_count + equal_to_edited_count
+
+    def test_delete_heros_with_name(self):
+        search = True
+        while search:
+            table_rows = self.find_elements(By.CSS_SELECTOR, "tr")
+            search = False
+
+            for row in table_rows:
+                if row is not None:
+                    td = row.find_element(By.CSS_SELECTOR, "td")
+
+                    if td.text ==  "NameTest - edited":
+                        edit_button = row.find_element(By.CSS_SELECTOR, "button")
+                        edit_button.click()
+
+                        delete_button = self.find_element(By.XPATH, "//button[text()='Delete']")
+                        delete_button.click()
+
+                        search = True
+                        break
+
+            time.sleep(2)
+
+        return True
 
     def test_edit_form_initial_input_values(self):
         valid = True
@@ -84,7 +162,7 @@ class SuperHero(webdriver.Chrome):
                 last_name_value_initial = last_name_input.get_attribute("value")
                 last_name_input.send_keys(" - tested")
                 
-                place_input  = edit_form.find_element(By.CSS_SELECTOR, "input[placeholder='Place']")
+                place_input = edit_form.find_element(By.CSS_SELECTOR, "input[placeholder='Place']")
                 place_input_value_initial = place_input.get_attribute("value")
                 place_input.send_keys(" - tested")
 
