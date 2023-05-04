@@ -2,6 +2,9 @@ import time
 import superhero.constants as const
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support import expected_conditions as EC
 
 class SuperHero(webdriver.Chrome):
     def __init__(self, url: str, full_window = False):
@@ -175,3 +178,15 @@ class SuperHero(webdriver.Chrome):
                 row += 1
         
         return valid
+    
+    def test_change_color(self):
+        color = 'blue'
+        select_button = self.find_element(By.CSS_SELECTOR, "select")
+        select = Select(select_button)
+
+        select.select_by_value(color)
+        WebDriverWait(self, timeout=const.EXPLICITE_WAITING_TIME).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, f"body[style*='background-color: {color}']"))
+        )
+
+        return True

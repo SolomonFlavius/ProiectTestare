@@ -1,3 +1,13 @@
+<div>Background</div>
+<select [(ngModel)]="selectedColor" (change)="onSelectChange()">
+  <option value="white" selected="true">White</option>
+  <option value="orange">Orange</option>
+  <option value="blue">Blue</option>
+</select>
+<br>
+<br>
+<br>
+
 <button id="create-hero-button" (click)="initNewHero()">Create New Hero</button>
 
 <table>
